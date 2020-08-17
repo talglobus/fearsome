@@ -8,7 +8,7 @@ func Traverse(from int, to int) <-chan int {
 			for i := from; i <= to; i++ {
 				out <- i
 			}
-			close (out)
+			close(out)
 		}()
 		return out
 	} else if from > to {
@@ -16,13 +16,13 @@ func Traverse(from int, to int) <-chan int {
 			for i := from; i >= to; i-- {
 				out <- i
 			}
-			close (out)
+			close(out)
 		}()
 		return out
-	// If the `from` and `to` values are equal, just send that value, which won't be blocking because of the buffer
 	} else {
+		// If the `from` and `to` values are equal, just send that value, which won't be blocking because of the buffer
 		out <- from
-		close(out)	// TODO: Make sure this operation isn't blocking
+		close(out) // TODO: Make sure this operation isn't blocking
 		return out
 	}
 }
