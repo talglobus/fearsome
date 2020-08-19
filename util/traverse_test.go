@@ -33,22 +33,19 @@ func TestTraverse(t *testing.T) {
 					wants = append(wants, want)
 
 					if !ok {
-						t.Errorf("Traverse from %v to %v ended prematurely. Expected %v..., observed %v...",
+						t.Fatalf("Traverse from %v to %v ended prematurely. Expected %v..., observed %v...",
 							table.from, table.to, wants, gots)
-						return
 					}
 
 					gots = append(gots, got)
 
 					if want != got {
-						t.Errorf("Traverse from %v to %v was incorrect. Expected %v..., observed %v...",
+						t.Fatalf("Traverse from %v to %v was incorrect. Expected %v..., observed %v...",
 							table.from, table.to, wants, gots)
-						return
 					}
 				case <-time.After(TIMEOUT):
-					t.Errorf("Traverse from %v to %v hit %v timeout. Expected %v..., observed %v...",
+					t.Fatalf("Traverse from %v to %v hit %v timeout. Expected %v..., observed %v...",
 						table.from, table.to, TIMEOUT, wants, gots)
-					return
 				}
 			}
 
@@ -58,16 +55,14 @@ func TestTraverse(t *testing.T) {
 				// Check if the output channel is exhausted when the "want" list is exhausted
 				if ok {
 					gots = append(gots, got)
-					t.Errorf("Traverse from %v to %v was incorrect. Expected %v..., observed %v...",
+					t.Fatalf("Traverse from %v to %v was incorrect. Expected %v..., observed %v...",
 						table.from, table.to, wants, gots)
-					return
 				}
 
 			// Check if the output channel was left open
 			case <-time.After(TIMEOUT):
-				t.Errorf("Traverse from %v to %v failed to close output channel after %v elems, expected %v",
+				t.Fatalf("Traverse from %v to %v failed to close output channel after %v elems, expected %v",
 					table.from, table.to, len(gots), len(table.steps))
-				return
 			}
 		})
 	}
