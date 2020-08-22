@@ -8,6 +8,7 @@ import (
 // The wisdom of naming a type `Type` is generally questionable, but here is actually quite reasonable
 type Type int
 
+// NONE, RED, and BLUE are used to indicate the piece type of a square, with NONE also acting as a valid nil value
 const (
 	NONE Type = iota
 	RED
