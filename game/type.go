@@ -25,10 +25,10 @@ func (t Type) String() string {
 	}
 }
 
-// enumStatic is an interface for creating singletons exposing static methods on enumerated types
-type enumStatic interface {
-	Rand() Type
-	Count() int
+// EnumStatic is an interface for creating singletons exposing static methods on enumerated types
+type EnumStatic interface {
+	Rand() Type // Rand randomly constructs an instance of enum
+	Count() int // Count returns the number of valid values in the enum
 }
 
 type typeStatic struct{}
@@ -44,4 +44,4 @@ func (typeStatic) Rand() Type {
 }
 
 // TYPE is a singleton exposing static methods on Type
-var TYPE enumStatic = typeStatic{}
+var TYPE EnumStatic = typeStatic{}

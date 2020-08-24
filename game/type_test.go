@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"github.com/talglobus/fearsome/test"
 	"math"
 	"testing"
@@ -42,4 +43,23 @@ func TestTypeStatic_Rand(t *testing.T) {
 	if minPass := int(math.Floor(ROUNDS / 3 * (1 - TOLERANCE))); red < minPass || blue < minPass || none < minPass {
 		t.Fatal("newRandType must give random mix of `RED`s, `BLUE`s, and `NONE`s. Probabilistic, try test again")
 	}
+}
+
+func ExampleTypeStatic_Count() {
+	types := []Type{NONE, RED, BLUE}
+	fmt.Println(TYPE.Count() == len(types))
+	// Output: true
+}
+
+func ExampleTypeStatic_Rand() {
+	types := []Type{NONE, RED, BLUE}
+	r := TYPE.Rand()
+	for _, t := range types {
+		if r == t {
+			fmt.Println("Random Type is in enum")
+			return
+		}
+	}
+	fmt.Println("Random Type is not in enum")
+	// Output: Random Type is in enum
 }
