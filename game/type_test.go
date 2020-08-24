@@ -17,7 +17,7 @@ func TestType_String(t *testing.T) {
 	}
 }
 
-func TestType_newRandType(t *testing.T) {
+func TestTypeStatic_Rand(t *testing.T) {
 	const (
 		ROUNDS = 10000 // Number of test iterations to confirm random variation below tolerance
 		// TOLERANCE sets a threshold, for variation in random output. Given 10,000 rounds, and a 5% tolerance,
@@ -29,7 +29,7 @@ func TestType_newRandType(t *testing.T) {
 	)
 	var red, blue, none int
 	for i := 0; i < ROUNDS; i++ {
-		switch newRandType() {
+		switch TYPE.Rand() {
 		case RED:
 			red++
 		case BLUE:

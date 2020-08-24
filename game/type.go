@@ -1,8 +1,6 @@
 package game
 
-import (
-	"math/rand"
-)
+import "math/rand"
 
 // Type is an enumerated triad type consisting of red piece, blue piece, or no piece.
 // The wisdom of naming a type `Type` is generally questionable, but here is actually quite reasonable
@@ -15,12 +13,7 @@ const (
 	BLUE
 )
 
-// newRandType() randomly constructs a new `Type`
-func newRandType() Type {
-	return Type(rand.Intn(3))
-}
-
-// String() enables for a `Type` to be serialized to string format
+// String enables for a `Type` to be serialized to string format
 func (t Type) String() string {
 	switch t {
 	case RED:
@@ -31,3 +24,24 @@ func (t Type) String() string {
 		return "---"
 	}
 }
+
+// enumStatic is an interface for creating singletons exposing static methods on enumerated types
+type enumStatic interface {
+	Rand() Type
+	Count() int
+}
+
+type typeStatic struct{}
+
+// Rand randomly constructs a new Type
+func (typeStatic) Rand() Type {
+	return Type(rand.Intn(3))
+}
+
+// Count returns the number of valid values in the Type enum, allowing for simple and easy reflection-like behavior
+func (typeStatic) Count() int {
+	return 3
+}
+
+// TYPE is a singleton exposing static methods on Type
+var TYPE enumStatic = typeStatic{}
