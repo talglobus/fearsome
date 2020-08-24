@@ -33,14 +33,14 @@ type enumStatic interface {
 
 type typeStatic struct{}
 
-// Rand randomly constructs a new Type
-func (typeStatic) Rand() Type {
-	return Type(rand.Intn(3))
-}
-
 // Count returns the number of valid values in the Type enum, allowing for simple and easy reflection-like behavior
 func (typeStatic) Count() int {
 	return 3
+}
+
+// Rand randomly constructs a new Type
+func (typeStatic) Rand() Type {
+	return Type(rand.Intn(typeStatic{}.Count()))
 }
 
 // TYPE is a singleton exposing static methods on Type
