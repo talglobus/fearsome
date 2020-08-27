@@ -29,3 +29,18 @@ func (h History) String() string {
 	// Return move sequence without trailing spaces and arrow
 	return str[:len(str)-4]
 }
+
+// Equals tests equality for two move histories
+func (h History) Equals(h2 History) bool {
+	if len(h) != len(h2) {
+		return false
+	}
+
+	for i := range h {
+		if h[i] != h2[i] {
+			return false
+		}
+	}
+
+	return true
+}
