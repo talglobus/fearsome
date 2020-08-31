@@ -1,6 +1,9 @@
 package board
 
-import "sync"
+import (
+	"fmt"
+	"sync"
+)
 
 // COLS and ROWS define the size of the game board, and are largely manipulable for different game dynamics
 const (
@@ -92,7 +95,7 @@ func (b *Board) Move(colNum int) (Type, int, error) {
 		}
 	}
 
-	return NONE, 0, FullColumnError(colNum)
+	return NONE, 0, fmt.Errorf("cannot make move in column %v: %w", colNum, FullColumnError(colNum))
 }
 
 // MoveRed wraps Move for a slightly safer, `red`-specific way of making moves
@@ -100,7 +103,8 @@ func (b *Board) Move(colNum int) (Type, int, error) {
 // In case of both, the error caused by the out-of-turn move takes precedence, thus only that error will be shown.
 func (b *Board) MoveRed(colNum int) (int, error) {
 	if b.nextTurn() != RED {
-		return 0, TurnValidityError(RED)
+		return 0, fmt.Errorf("cannot make %v move in column %v: %w",
+			RED.String(), colNum, TurnValidityError(RED))
 	}
 
 	_, r, e := b.Move(colNum)
@@ -113,7 +117,8 @@ func (b *Board) MoveRed(colNum int) (int, error) {
 // In case of both, the error caused by the out-of-turn move takes precedence, thus only that error will be shown.
 func (b *Board) MoveBlue(colNum int) (int, error) {
 	if b.nextTurn() != BLUE {
-		return 0, TurnValidityError(BLUE)
+		return 0, fmt.Errorf("cannot make %v move in column %v: %w",
+			BLUE.String(), colNum, TurnValidityError(BLUE))
 	}
 
 	_, r, e := b.Move(colNum)

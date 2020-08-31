@@ -30,7 +30,7 @@ func (h History) String() string {
 	return str[:len(str)-4]
 }
 
-// Equals tests equality for two move histories
+// Equals tests equality between two move histories
 func (h History) Equals(h2 History) bool {
 	if len(h) != len(h2) {
 		return false

@@ -1,6 +1,7 @@
 package board
 
 import (
+	"errors"
 	"sync"
 	"testing"
 )
@@ -96,7 +97,7 @@ func TestBoard_Move(t *testing.T) {
 					elem.name, elem.move, elem.row, row)
 			}
 
-			if err != elem.err {
+			if !errors.Is(err, elem.err) {
 				t.Errorf("%v into column %v produced unexpected error. Expected:\n\t%v\nObserved:\n\t%v",
 					elem.name, elem.move, elem.err, err)
 			}
@@ -165,7 +166,7 @@ func TestBoard_MoveRed(t *testing.T) {
 					elem.name, elem.move, elem.row, row)
 			}
 
-			if err != elem.err {
+			if !errors.Is(err, elem.err) {
 				t.Errorf("%v into column %v produced unexpected error. Expected:\n\t%v\nObserved:\n\t%v",
 					elem.name, elem.move, elem.err, err)
 			}
@@ -234,7 +235,7 @@ func TestBoard_MoveBlue(t *testing.T) {
 					elem.name, elem.move, elem.row, row)
 			}
 
-			if err != elem.err {
+			if !errors.Is(err, elem.err) {
 				t.Errorf("%v into column %v produced unexpected error. Expected:\n\t%v\nObserved:\n\t%v",
 					elem.name, elem.move, elem.err, err)
 			}
