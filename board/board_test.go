@@ -8,13 +8,12 @@ import (
 
 func TestBoard_Move(t *testing.T) {
 	table := []struct {
-		name   string
-		move   int
-		before Board
-		after  Board
-		typ    Type
-		row    int
-		err    error
+		name          string
+		move          int
+		before, after Board
+		typ           Type
+		row           int
+		err           error
 	}{
 		{"red move",
 			5,
@@ -26,8 +25,8 @@ func TestBoard_Move(t *testing.T) {
 				history: History{4, 5, 5},
 				state:   State{{}, {}, {}, {}, {RED}, {BLUE, RED}, {}},
 				mutex:   &sync.RWMutex{},
-			}, RED, 1, nil},
-		{"blue move",
+			}, RED, 1, nil,
+		}, {"blue move",
 			5,
 			Board{
 				history: History{4},
@@ -37,8 +36,8 @@ func TestBoard_Move(t *testing.T) {
 				history: History{4, 5},
 				state:   State{{}, {}, {}, {}, {RED}, {BLUE}, {}},
 				mutex:   &sync.RWMutex{},
-			}, BLUE, 0, nil},
-		{"red move on empty board",
+			}, BLUE, 0, nil,
+		}, {"red move on empty board",
 			6,
 			Board{
 				history: History{},
@@ -48,8 +47,8 @@ func TestBoard_Move(t *testing.T) {
 				history: History{6},
 				state:   State{{}, {}, {}, {}, {}, {}, {RED}},
 				mutex:   &sync.RWMutex{},
-			}, RED, 0, nil},
-		{"blue move on empty column",
+			}, RED, 0, nil,
+		}, {"blue move on empty column",
 			5,
 			Board{
 				history: History{0},
@@ -59,21 +58,22 @@ func TestBoard_Move(t *testing.T) {
 				history: History{0, 5},
 				state:   State{{RED}, {}, {}, {}, {}, {BLUE}, {}},
 				mutex:   &sync.RWMutex{},
-			}, BLUE, 0, nil},
-		{"red move on full column",
+			}, BLUE, 0, nil,
+		}, {"red move on full column",
 			5,
 			Board{
 				history: History{4, 5, 5, 4, 4, 5, 5, 4, 4, 5, 5, 4},
 				state:   State{{}, {}, {}, {}, {RED, BLUE, RED, BLUE, RED, BLUE}, {BLUE, RED, BLUE, RED, BLUE, RED}},
 				mutex:   &sync.RWMutex{},
-			}, New(), NONE, 0, FullColumnError(5)},
-		{"blue move on full column",
+			}, New(), NONE, 0, FullColumnError(5),
+		}, {"blue move on full column",
 			0,
 			Board{
 				history: History{0, 1, 0, 1, 0, 1, 1, 3, 1, 0, 1, 0, 0},
 				state:   State{{RED, RED, RED, BLUE, BLUE, RED}, {BLUE, BLUE, BLUE, RED, RED, RED}, {}, {BLUE}},
 				mutex:   &sync.RWMutex{},
-			}, New(), NONE, 0, FullColumnError(0)},
+			}, New(), NONE, 0, FullColumnError(0),
+		},
 	}
 
 	for _, elem := range table {
@@ -109,12 +109,11 @@ func TestBoard_MoveRed(t *testing.T) {
 	// Note that the restricted testcases used here assume MoveRed wraps Move, so Move tests cover move functionality
 
 	table := []struct {
-		name   string
-		move   int
-		before Board
-		after  Board
-		row    int
-		err    error
+		name          string
+		move          int
+		before, after Board
+		row           int
+		err           error
 	}{
 		{"red move",
 			5,
@@ -126,28 +125,29 @@ func TestBoard_MoveRed(t *testing.T) {
 				history: History{4, 5, 5},
 				state:   State{{}, {}, {}, {}, {RED}, {BLUE, RED}, {}},
 				mutex:   &sync.RWMutex{},
-			}, 1, nil},
-		{"blue move",
+			}, 1, nil,
+		}, {"blue move",
 			5,
 			Board{
 				history: History{4},
 				state:   State{{}, {}, {}, {}, {RED}, {}, {}},
 				mutex:   &sync.RWMutex{},
-			}, New(), 0, TurnValidityError(RED)},
-		{"red move on full column",
+			}, New(), 0, TurnValidityError(RED),
+		}, {"red move on full column",
 			5,
 			Board{
 				history: History{4, 5, 5, 4, 4, 5, 5, 4, 4, 5, 5, 4},
 				state:   State{{}, {}, {}, {}, {RED, BLUE, RED, BLUE, RED, BLUE}, {BLUE, RED, BLUE, RED, BLUE, RED}},
 				mutex:   &sync.RWMutex{},
-			}, New(), 0, FullColumnError(5)},
-		{"blue move on full column",
+			}, New(), 0, FullColumnError(5),
+		}, {"blue move on full column",
 			0,
 			Board{
 				history: History{0, 1, 0, 1, 0, 1, 1, 3, 1, 0, 1, 0, 0},
 				state:   State{{RED, RED, RED, BLUE, BLUE, RED}, {BLUE, BLUE, BLUE, RED, RED, RED}, {}, {BLUE}},
 				mutex:   &sync.RWMutex{},
-			}, New(), 0, TurnValidityError(RED)},
+			}, New(), 0, TurnValidityError(RED),
+		},
 	}
 
 	for _, elem := range table {
@@ -178,12 +178,11 @@ func TestBoard_MoveBlue(t *testing.T) {
 	// Note that the restricted testcases used here assume MoveRed wraps Move, so Move tests cover move functionality
 
 	table := []struct {
-		name   string
-		move   int
-		before Board
-		after  Board
-		row    int
-		err    error
+		name          string
+		move          int
+		before, after Board
+		row           int
+		err           error
 	}{
 		{"red move",
 			5,
@@ -191,8 +190,8 @@ func TestBoard_MoveBlue(t *testing.T) {
 				history: History{4, 5},
 				state:   State{{}, {}, {}, {}, {RED}, {BLUE}, {}},
 				mutex:   &sync.RWMutex{},
-			}, New(), 0, TurnValidityError(BLUE)},
-		{"blue move",
+			}, New(), 0, TurnValidityError(BLUE),
+		}, {"blue move",
 			5,
 			Board{
 				history: History{4},
@@ -202,21 +201,22 @@ func TestBoard_MoveBlue(t *testing.T) {
 				history: History{4, 5},
 				state:   State{{}, {}, {}, {}, {RED}, {BLUE}, {}},
 				mutex:   &sync.RWMutex{},
-			}, 0, nil},
-		{"red move on full column",
+			}, 0, nil,
+		}, {"red move on full column",
 			5,
 			Board{
 				history: History{4, 5, 5, 4, 4, 5, 5, 4, 4, 5, 5, 4},
 				state:   State{{}, {}, {}, {}, {RED, BLUE, RED, BLUE, RED, BLUE}, {BLUE, RED, BLUE, RED, BLUE, RED}},
 				mutex:   &sync.RWMutex{},
-			}, New(), 0, TurnValidityError(BLUE)},
-		{"blue move on full column",
+			}, New(), 0, TurnValidityError(BLUE),
+		}, {"blue move on full column",
 			0,
 			Board{
 				history: History{0, 1, 0, 1, 0, 1, 1, 3, 1, 0, 1, 0, 0},
 				state:   State{{RED, RED, RED, BLUE, BLUE, RED}, {BLUE, BLUE, BLUE, RED, RED, RED}, {}, {BLUE}},
 				mutex:   &sync.RWMutex{},
-			}, New(), 0, FullColumnError(0)},
+			}, New(), 0, FullColumnError(0),
+		},
 	}
 
 	for _, elem := range table {
