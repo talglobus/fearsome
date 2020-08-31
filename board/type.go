@@ -25,6 +25,17 @@ func (t Type) String() string {
 	}
 }
 
+func (t Type) invert() Type {
+	switch t {
+	case RED:
+		return BLUE
+	case BLUE:
+		return RED
+	default:
+		return NONE
+	}
+}
+
 // EnumStatic is an interface for creating singletons exposing static methods on enumerated types
 type EnumStatic interface {
 	Rand() Type // Rand randomly constructs an instance of enum
