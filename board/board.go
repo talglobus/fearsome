@@ -65,10 +65,8 @@ func (b Board) Equals(b2 Board) bool {
 	return b.state == b2.state && b.history.Equals(b2.history)
 }
 
-// nextTurn determines type of next move based on the board's history, even-indexed moves being red, odd-indexed blue
-func (b Board) nextTurn() Type {
-	b.RLock()
-	defer b.RUnlock()
+// nextTurnUnsafe performs a guardrails-down next move evaluation. Risks race conditions if mutex isn't locked
+func (b Board) nextTurnUnsafe() Type {
 	var t Type
 	if turnParity := len(b.history) % 2; turnParity == 0 {
 		t = RED
@@ -78,13 +76,20 @@ func (b Board) nextTurn() Type {
 	return t
 }
 
+// nextTurn determines type of next move based on the board's history, even-indexed moves being red, odd-indexed blue
+func (b Board) nextTurn() Type {
+	b.RLock()
+	defer b.RUnlock()
+	return b.nextTurnUnsafe()
+}
+
 // Move allows for by-column, "drop-style" move making, as in real-life Connect Four
 // Note: Returns the resulting row coordinate, and an error if attempting to make a move in an already-full column
 func (b *Board) Move(colNum int) (Type, int, error) {
-	t := b.nextTurn()
-
 	b.Lock()
 	defer b.Unlock()
+
+	t := b.nextTurnUnsafe()
 
 	// Iterate over chosen column from bottom to top, filling the first empty square, or returning error if none found
 	for rowNum := range b.state[colNum] {
@@ -124,4 +129,39 @@ func (b *Board) MoveBlue(colNum int) (int, error) {
 	_, r, e := b.Move(colNum)
 
 	return r, e
+}
+
+// Unmove undoes the last move made, given History Validity. Can be used repeatedly to walk back to an empty board
+func (b *Board) Unmove() error {
+	b.Lock()
+	defer b.Unlock()
+
+	if len(b.history) == 0 {
+		return EmptyBoardError{}
+	}
+	// TODO: Error on unmove with empty board
+
+	// Pull column of last move from history, and pull type from state, allowing for validating each against the other
+	col := b.history[len(b.history)-1]
+	t := b.nextTurnUnsafe().invert()
+
+	// Iterate over column from top to bottom, matching first non-empty square against type
+	for i := ROWS - 1; i >= 0; i-- {
+		if square := b.state[col][i]; square == t.invert() {
+			// If the square is of the opposite Type expected (RED when expecting BLUE or vice versa), error
+			return fmt.Errorf("cannot undo move (column %v, type %v): %w", col, t, HistoryValidityError(*b))
+			// TODO: Error on unmove with substituted top element in history
+		} else if square == t {
+			// If the square is of the Type expected, undo the move
+			b.state[col][i] = NONE
+			b.history = b.history[:len(b.history)-1]
+			return nil
+			// TODO: Undo move on matching history and non-empty board
+		}
+	}
+
+	// If column is exhausted and correct piece still hasn't been found on top, History Validity must be violated
+	return fmt.Errorf("cannot undo move (column %v, type %v) as column is empty: %w",
+		col, t, HistoryValidityError(*b))
+	// TODO: Error on unmove with empty column (deletion from state relative to history)
 }

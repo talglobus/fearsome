@@ -1,6 +1,9 @@
 package board
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 // FullColumnError defines an error used when attempting to add pieces to an already-full column
 type FullColumnError int
@@ -22,6 +25,16 @@ type HistoryValidityError Board
 func (e HistoryValidityError) Error() string {
 	return fmt.Sprintf("board history does not match board state\nState:\n%v\nHistory:\n%v",
 		e.state, e.history)
+}
+
+// Is provides an implementation of errors.Is allowing HistoryValidityError errors to be matched against and compared
+// despite the inability of Board instances to be evaluated for equality automatically using built-in operators.
+func (e HistoryValidityError) Is(target error) bool {
+	var t HistoryValidityError
+	if !errors.As(target, &t) {
+		return false
+	}
+	return e.state == t.state && e.history.Equals(t.history)
 }
 
 // EmptyBoardError defines an error used when operations requiring a non-empty board are attempted on an empty board
