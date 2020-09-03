@@ -347,34 +347,8 @@ func TestBoard_Unmove(t *testing.T) {
 		}
 
 		if !errors.Is(err, elem.err) {
-
 			t.Errorf("%v produced unexpected error. Expected:\n\t%v\nObserved:\n\t%v",
 				elem.name, elem.err, err)
 		}
-
-		// // There are three ways this test could fail from this point:
-		// // Either (a) a nil is observed when an an error was expected or vice versa, or
-		// // (2) a non-nil error of a different type from that expected is observed, or
-		// // (3) a HistoryValidityError error is observed, and one is (implicitly) expected by the previous conditions,
-		// // and their Board's don't match.
-		// // Any other type of error matches just on type, so the check for (2) is enough
-		// var h HistoryValidityError
-		// if err == nil && elem.err != nil || err != nil && elem.err == nil ||		// Test (1) above
-		// 	err != nil && err != elem.err && !errors.As(err, &h) { // Test (2) above
-		// 	t.Errorf("%v produced unexpected error. Expected:\n\t%v\nObserved:\n\t%v",
-		// 		elem.name, elem.err, err)
-		// }
-		// } else if o, ok := h.(HistoryValidityError); ok {
-		// 	fmt.Println("intewesting")
-		// 	// If both errors are of type HistoryValidityError (logical consequence of previous ifs), check equality
-		// 	e, _ := elem.err.(HistoryValidityError)
-		// 	if o.state != e.state || !o.history.Equals(e.history) {
-		// 		t.Errorf("%v produced unexpected error. Expected:\n\t%v\nObserved:\n\t%v",
-		// 			elem.name, elem.err, err)
-		// 	}
-		// }
-		// o, ok := h.(HistoryValidityError)
-
-		// fmt.Println(&o, "|", reflect.TypeOf(o))
 	}
 }

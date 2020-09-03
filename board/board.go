@@ -139,7 +139,6 @@ func (b *Board) Unmove() error {
 	if len(b.history) == 0 {
 		return EmptyBoardError{}
 	}
-	// TODO: Error on unmove with empty board
 
 	// Pull column of last move from history, and pull type from state, allowing for validating each against the other
 	col := b.history[len(b.history)-1]
@@ -150,18 +149,15 @@ func (b *Board) Unmove() error {
 		if square := b.state[col][i]; square == t.invert() {
 			// If the square is of the opposite Type expected (RED when expecting BLUE or vice versa), error
 			return fmt.Errorf("cannot undo move (column %v, type %v): %w", col, t, HistoryValidityError(*b))
-			// TODO: Error on unmove with substituted top element in history
 		} else if square == t {
 			// If the square is of the Type expected, undo the move
 			b.state[col][i] = NONE
 			b.history = b.history[:len(b.history)-1]
 			return nil
-			// TODO: Undo move on matching history and non-empty board
 		}
 	}
 
 	// If column is exhausted and correct piece still hasn't been found on top, History Validity must be violated
 	return fmt.Errorf("cannot undo move (column %v, type %v) as column is empty: %w",
 		col, t, HistoryValidityError(*b))
-	// TODO: Error on unmove with empty column (deletion from state relative to history)
 }
