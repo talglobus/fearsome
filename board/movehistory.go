@@ -3,7 +3,7 @@ package board
 import "fmt"
 
 // Move holds the choice of column for a given move
-type Move int
+type Move uint8
 
 // History holds a sequence of moves, with even-indexed moves red and odd-indexed moves blue, in sequential order
 type History []Move

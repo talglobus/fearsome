@@ -4,7 +4,7 @@ import "math/rand"
 
 // Type is an enumerated triad type consisting of red piece, blue piece, or no piece.
 // The wisdom of naming a type `Type` is generally questionable, but here is actually quite reasonable
-type Type int
+type Type uint8
 
 // NONE, RED, and BLUE are used to indicate the piece type of a square, with NONE also acting as a valid nil value
 const (

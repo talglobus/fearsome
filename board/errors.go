@@ -6,7 +6,7 @@ import (
 )
 
 // FullColumnError defines an error used when attempting to add pieces to an already-full column
-type FullColumnError int
+type FullColumnError Move
 
 func (e FullColumnError) Error() string {
 	return fmt.Sprintf("column %v is full and cannot accept any more pieces", int(e))

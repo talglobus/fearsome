@@ -22,9 +22,9 @@ type Board struct {
 // New constructs a new Board
 func New() Board {
 	return Board{
-		History{},
-		State{},
-		&sync.RWMutex{},
+		history: History{},
+		state:   State{},
+		mutex:   &sync.RWMutex{},
 	}
 }
 
